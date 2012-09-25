@@ -1,0 +1,22 @@
+#<IfModule mod_rewrite.c>
+#    RewriteEngine On
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+#</IfModule>
+<IfModule mod_php4.c>
+  php_value register_globals 1
+</IfModule>
+
+<IfModule sapi_apache2.c>
+  php_value register_globals 1
+</IfModule>
+
+php_flag register_globals 1
+
+Options +FollowSymLinks
+RewriteEngine on
+#RewriteRule ^(server|admin)($|/) - [L]
+#RewriteRule ^server($|/) - [L]
+#RewriteRule ^(images)?/?(products)?/?([a-zA-Z0-9]*)?/?$ - [L]
+RewriteRule ^([a-zA-Z]*)/?([a-zA-Z]*)?/?([a-zA-Z0-9]*)?/?$ index.php?controller=$1&action=$2&id=$3 [NC,L]
