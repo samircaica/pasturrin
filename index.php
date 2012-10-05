@@ -6,7 +6,7 @@ require_once 'php-activerecord/ActiveRecord.php';
 ActiveRecord\Config::initialize(function($cfg) {
 	$cfg->set_model_directory('app/models');
 	$cfg->set_connections(array(
-	    'development' => 'database_connection'));
+	    'development' => 'mysql://root:@localhost/wazpo'));
 });
 
 
@@ -23,7 +23,7 @@ define('PASTURRIN_APP_DIR', PASTURRIN_BASE_DIR . DS . 'app');
 define('APP_ROOT', PASTURRIN_BASE_DIR . DS . 'public');
 define('APP_LIB_DIR', PASTURRIN_BASE_DIR . DS . 'lib');
 define('PASTURRIN_VENDOR_DIR', PASTURRIN_BASE_DIR . DS . 'vendor');
-define('BASE_URL', 'http://www.project.com');
+define('BASE_URL', 'http://wazpo.dev');
 
 
 set_include_path(get_include_path() . PATH_SEPARATOR . PASTURRIN_LIB_DIR . PATH_SEPARATOR . PASTURRIN_VENDOR_DIR);
@@ -41,24 +41,10 @@ function application_autoload($class_name) {
 	elseif(preg_match('/\w+Helper$/', $class_name)) {
 		// include app/helers
 		include_once(PASTURRIN_APP_DIR . DS . 'helpers' . DS . str_replace('Helper', '', $class_name) . '_helper.php');
-	}
-	elseif(file_exists(PASTURRIN_APP_DIR . DS . 'models' . DS . strtolower($class_name) . '.php')) {
-		// include app/models
-		include_once(PASTURRIN_APP_DIR . DS . 'models' . DS . strtolower($class_name) . '.php');
-		if($class_name != 'activerecords') {
-			//$tmp = new $class_name;
-			//$tmp->_init();
-			// because of STATIC PROBLEMS in php versions below 5.3.0
-			//call_user_func(array($class_name, '_init'), $class_name);
-		}
-	}
+	}	
 	elseif(file_exists(PASTURRIN_LIB_DIR . DS . 'controller' . DS . ucwords(strtolower($class_name)) . '.php')) {
 		// include PASTURRIN/controller/lib
 		include_once(PASTURRIN_LIB_DIR . DS . 'controller' . DS . ucwords(strtolower($class_name)) . '.php');
-	}
-	elseif(file_exists(PASTURRIN_LIB_DIR . DS . 'model' . DS . ucwords(strtolower($class_name)) . '.php')) {
-		// include PASTURRIN/controller/lib
-		include_once(PASTURRIN_LIB_DIR . DS . 'model' . DS . ucwords(strtolower($class_name)) . '.php');
 	}
 	elseif(file_exists(PASTURRIN_LIB_DIR . DS . 'helper' . DS . 'helpers' . DS . strtolower($class_name) . '.php')) {
 		// include PASTURRIN/database/adapters/lib

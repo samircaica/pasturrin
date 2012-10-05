@@ -46,7 +46,9 @@
 				$this->controller->after_filter();
 				//$this->debug();
 			} catch (Exception $e) {
-			    echo 'Caught exceptionnnn: ',  $e->getMessage(), "\n";
+			    //echo 'Caught exceptionnnn: ',  $e->getMessage(), "\n";
+			    $this->controller = $this->params['controller'];
+			    include(PASTURRIN_LIB_DIR . DS . 'views' . DS . 'controller_missing.phtml');
 
 			}
 
