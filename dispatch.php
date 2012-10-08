@@ -1,6 +1,6 @@
 <?php
 
-
+	include_once ("config/Routes.php");
 
 	class Dispatch {
 		private $request;
@@ -24,7 +24,14 @@
 				$this->process();				
 			} else {
 				//echo "inicio";
-				header('location: index.html' );
+				//echo $valor;
+				//header('location: index.html' );
+				$this->routes = new Routes();
+				$this->params['controller']	=	$this->routes->getController();
+				$this->params['action']		=	$this->routes->getAction();
+				$this->params['id']			=	$this->routes->getId();
+				$this->routes = null;
+				$this->process();
         		die;
 			}
 			
