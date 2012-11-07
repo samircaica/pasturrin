@@ -7,10 +7,10 @@ class Controller {
 	public $logger;
 	public $request;
 	public $response;
-	public $use_layout;
+	public $use_layout	=	"";
 	public $template;
 	public $partial;
-	public $auto_render = true;
+	public $auto_render =	true;
 
 	public $flash;
 

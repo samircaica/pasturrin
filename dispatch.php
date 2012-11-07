@@ -1,6 +1,6 @@
 <?php
 
-
+	include_once ("config/Routes.php");
 
 	class Dispatch {
 		private $request;
@@ -24,7 +24,14 @@
 				$this->process();				
 			} else {
 				//echo "inicio";
-				header('location: index.html' );
+				//echo $valor;
+				//header('location: index.html' );
+				$this->routes = new Routes();
+				$this->params['controller']	=	$this->routes->getController();
+				$this->params['action']		=	$this->routes->getAction();
+				$this->params['id']			=	$this->routes->getId();
+				$this->routes = null;
+				$this->process();
         		die;
 			}
 			
@@ -34,8 +41,7 @@
 
 		function process() {
 			//echo "Dispatch::process";
-			$class_name = $this->params['controller'] . "Controller";
-			try {
+			if(class_exists($class_name = $this->params['controller'] . "Controller")) {
 				$this->controller = new $class_name;
 			
 			
@@ -45,10 +51,19 @@
 				$this->render();
 				$this->controller->after_filter();
 				//$this->debug();
-			} catch (Exception $e) {
-			    echo 'Caught exceptionnnn: ',  $e->getMessage(), "\n";
+			} else if(class_exists($class_name = $this->params['controller'] . "Rest")) {
+				//echo "Carga Rest";
+				$this->controller = new $class_name;
+			
+				$this->controller->params = $this->params;
 
+				$this->response();
+
+			} else {
+				$this->controller = $this->params['controller'];
+			    include(PASTURRIN_LIB_DIR . DS . 'views' . DS . 'controller_missing.phtml');
 			}
+			
 
 		}
 
@@ -64,6 +79,12 @@
 
 			if($this->controller->auto_render) {
 				$this->controller->render();
+			}
+		}
+
+		private function response() {
+			if(in_array($this->params['action'], get_class_methods(get_class($this->controller)))) {
+				call_user_func(array($this->controller, $this->params['action']));
 			}
 		}
 
